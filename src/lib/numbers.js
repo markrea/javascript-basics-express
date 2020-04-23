@@ -11,7 +11,7 @@ const multiply = (a, b) => {
 };
 
 const divide = (a, b) => {
- return ( a / b);
+  return (a / b);
 };
 
 const power = (a, b) => {
@@ -19,7 +19,7 @@ const power = (a, b) => {
 };
 
 const round = a => {
-   return Math.round(a);
+  return Math.round(a);
 };
 
 const roundUp = a => {
