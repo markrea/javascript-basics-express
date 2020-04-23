@@ -5,7 +5,8 @@ const app = express();
 app.use(express.json());
 
 const { sayHello, uppercase, lowercase, firstCharacters } = require('./lib/strings');
-const { add, subtract, multiply, divide } = require('./lib/numbers');
+const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
+const { negate, truthiness } = require('./lib/booleans');
 
 const errorMessage = { error: 'Parameters must be valid numbers.' };
 
@@ -73,4 +74,18 @@ app.post('/numbers/divide', (req, res) => {
   }
   res.status(200).json({ result: divide(a, b) });
 });
+
+app.post('/numbers/remainder', (req, res) => {
+   const { a, b } = req.body;
+  res.status(200).json({ result: remainder(a, b) });
+});
+
+app.post('/booleans/negate', (req, res) => {
+  res.status(200).json({ result: negate(req.body.value) });
+});
+
+app.post('/booleans/truthiness', (req, res) => {
+  res.status(200).json({ result: truthiness(req.body.value) });
+})
+
 module.exports = app;
