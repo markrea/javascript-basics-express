@@ -7,7 +7,13 @@ app.use(express.json());
 const { sayHello, uppercase, lowercase, firstCharacters } = require('./lib/strings');
 const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
 const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
-const { getNthElement, arrayToCSVString, addToArray2, elementsStartingWithAVowel, removeNthElement } = require('./lib/arrays');
+const {
+  getNthElement,
+  arrayToCSVString,
+  addToArray2,
+  elementsStartingWithAVowel,
+  removeNthElement,
+} = require('./lib/arrays');
 
 const errorMessage = { error: 'Parameters must be valid numbers.' };
 
@@ -76,9 +82,21 @@ app.post('/numbers/divide', (req, res) => {
   res.status(200).json({ result: divide(a, b) });
 });
 
-app.post('/numbers/remainder', (req, res) => {
+app.all('/numbers/remainder', (req, res) => {
   const { a, b } = req.body;
-  res.status(200).json({ result: remainder(a, b) });
+  if (b === 0) {
+    res.status(400).json({ error: 'Unable to divide by 0.' });
+  }
+  if (a === 0) {
+    res.status(200).json({ result: 0 })
+  }
+  if (!a || !b) {
+    res.status(400).json({ error: 'Parameters "a" and "b" are required.' })
+  }
+  if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
+    res.status(400).json({ error: 'Parameters must be valid numbers.' })
+  }
+  res.status(200).send({ result: remainder(a, b) });
 });
 
 app.post('/booleans/negate', (req, res) => {
