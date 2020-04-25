@@ -6,7 +6,7 @@ app.use(express.json());
 
 const { sayHello, uppercase, lowercase, firstCharacters } = require('./lib/strings');
 const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
-const { negate, truthiness } = require('./lib/booleans');
+const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
 
 const errorMessage = { error: 'Parameters must be valid numbers.' };
 
@@ -86,6 +86,22 @@ app.post('/booleans/negate', (req, res) => {
 
 app.post('/booleans/truthiness', (req, res) => {
   res.status(200).json({ result: truthiness(req.body.value) });
+});
+
+app.get('/booleans/is-odd/:number', (req, res) => {
+  const number = parseInt(req.params.number);
+  return Number.isNaN(number)
+    ? res.status(400).json({ error: 'Parameter must be a number.' })
+    : res.status(200).json({ result: isOdd(number) });
+});
+
+app.get('/booleans/:string/starts-with/:character', (req, res) => {
+  const character = req.params.character;
+  if (character[1]) {
+    res.status(400).json({ error: 'Parameter "character" must be a single character.' })
+  } else {
+    res.status(200).json({ result: startsWith(req.params.character, req.params.string) });
+  };
 })
 
 module.exports = app;
