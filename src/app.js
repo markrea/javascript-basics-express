@@ -1,10 +1,11 @@
 const express = require('express');
+const stringsRouter = require('./routers/stringsRouters');
 
 const app = express();
 
 app.use(express.json());
+app.use('/strings', stringsRouter);
 
-const { sayHello, uppercase, lowercase, firstCharacters } = require('./lib/strings');
 const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
 const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
 const {
@@ -16,24 +17,6 @@ const {
 } = require('./lib/arrays');
 
 const errorMessage = { error: 'Parameters must be valid numbers.' };
-
-app.get('/strings/hello/:string', (req, res) => {
-  res.json({ result: sayHello(req.params.string) });
-});
-
-app.get('/strings/upper/:string', (req, res) => {
-  res.json({ result: uppercase(req.params.string) });
-});
-
-app.get('/strings/lower/:string', (req, res) => {
-  res.json({ result: lowercase(req.params.string) });
-});
-
-app.get('/strings/first-characters/:string', (req, res) => {
-  const length = req.query.length || 1;
-
-  res.json({ result: firstCharacters(req.params.string, length) });
-});
 
 app.get('/numbers/add/:firstNumber/and/:secondNumber', (req, res) => {
   // eslint-disable-next-line radix
@@ -60,7 +43,7 @@ app.post('/numbers/multiply', (req, res) => {
     return res.status(400).send({ error: 'Parameters "a" and "b" are required.' })
   }
   if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
-    return res.status(400).send({ error: 'Parameters "a" and "b" must be valid numbers.' });
+    return res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
   }
   res.status(200).json({ result: multiply(req.body.a, req.body.b) });
 });
@@ -115,7 +98,7 @@ app.get('/booleans/is-odd/:number', (req, res) => {
 });
 
 app.get('/booleans/:string/starts-with/:character', (req, res) => {
-  const character = req.params.character;
+  const { character } = req.params;
   if (character[1]) {
     res.status(400).json({ error: 'Parameter "character" must be a single character.' })
   } else {
