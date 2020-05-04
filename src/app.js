@@ -1,14 +1,15 @@
 const express = require('express');
 const stringsRouter = require('./routers/stringsRouters');
 const numbersRouter = require('./routers/numbersRouters');
+const booleansRouter = require('./routers/booleansRouters');
 
 const app = express();
 
 app.use(express.json());
 app.use('/strings', stringsRouter);
 app.use('/numbers', numbersRouter);
+app.use('/booleans', booleansRouter);
 
-const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
 const {
   getNthElement,
   arrayToCSVString,
@@ -16,30 +17,6 @@ const {
   elementsStartingWithAVowel,
   removeNthElement,
 } = require('./lib/arrays');
-
-app.post('/booleans/negate', (req, res) => {
-  res.status(200).json({ result: negate(req.body.value) });
-});
-
-app.post('/booleans/truthiness', (req, res) => {
-  res.status(200).json({ result: truthiness(req.body.value) });
-});
-
-app.get('/booleans/is-odd/:number', (req, res) => {
-  const number = parseInt(req.params.number);
-  return Number.isNaN(number)
-    ? res.status(400).json({ error: 'Parameter must be a number.' })
-    : res.status(200).json({ result: isOdd(number) });
-});
-
-app.get('/booleans/:string/starts-with/:character', (req, res) => {
-  const { character } = req.params;
-  if (character[1]) {
-    res.status(400).json({ error: 'Parameter "character" must be a single character.' })
-  } else {
-    res.status(200).json({ result: startsWith(req.params.character, req.params.string) });
-  };
-});
 
 app.post('/arrays/element-at-index/:index', (req, res) => {
   const { array } = req.body;

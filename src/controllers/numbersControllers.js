@@ -1,20 +1,16 @@
 const { add, subtract, multiply, divide, remainder } = require('../lib/numbers');
 
 exports.add = (req, res) => {
-  // eslint-disable-next-line radix
-  const firstNumber = parseInt(req.params.firstNumber);
-  // eslint-disable-next-line radix
-  const secondNumber = parseInt(req.params.secondNumber);
+  const firstNumber = parseInt(req.params.firstNumber, 10);
+  const secondNumber = parseInt(req.params.secondNumber, 10);
   return Number.isNaN(firstNumber) || Number.isNaN(secondNumber)
     ? res.status(400).json({ error: 'Parameters must be valid numbers.' })
     : res.status(200).json({ result: add(firstNumber, secondNumber) });
 };
 
 exports.subtract = (req, res) => {
-  // eslint-disable-next-line radix
-  const firstNumber = parseInt(req.params.firstNumber);
-  // eslint-disable-next-line radix
-  const secondNumber = parseInt(req.params.secondNumber);
+  const firstNumber = parseInt(req.params.firstNumber, 10);
+  const secondNumber = parseInt(req.params.secondNumber, 10);
   return Number.isNaN(firstNumber) || Number.isNaN(secondNumber)
     ? res.status(400).json({ error: 'Parameters must be valid numbers.' })
     : res.status(200).json({ result: subtract(secondNumber, firstNumber) });
