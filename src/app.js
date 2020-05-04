@@ -1,12 +1,13 @@
 const express = require('express');
 const stringsRouter = require('./routers/stringsRouters');
+const numbersRouter = require('./routers/numbersRouters');
 
 const app = express();
 
 app.use(express.json());
 app.use('/strings', stringsRouter);
+app.use('/numbers', numbersRouter);
 
-const { add, subtract, multiply, divide, remainder } = require('./lib/numbers');
 const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
 const {
   getNthElement,
@@ -15,72 +16,6 @@ const {
   elementsStartingWithAVowel,
   removeNthElement,
 } = require('./lib/arrays');
-
-const errorMessage = { error: 'Parameters must be valid numbers.' };
-
-app.get('/numbers/add/:firstNumber/and/:secondNumber', (req, res) => {
-  // eslint-disable-next-line radix
-  const firstNumber = parseInt(req.params.firstNumber);
-  // eslint-disable-next-line radix
-  const secondNumber = parseInt(req.params.secondNumber);
-  return Number.isNaN(firstNumber) || Number.isNaN(secondNumber)
-    ? res.status(400).json(errorMessage)
-    : res.status(200).json({ result: add(firstNumber, secondNumber) });
-});
-app.get('/numbers/subtract/:firstNumber/from/:secondNumber', (req, res) => {
-  // eslint-disable-next-line radix
-  const firstNumber = parseInt(req.params.firstNumber);
-  // eslint-disable-next-line radix
-  const secondNumber = parseInt(req.params.secondNumber);
-  return Number.isNaN(firstNumber) || Number.isNaN(secondNumber)
-    ? res.status(400).json(errorMessage)
-    : res.status(200).json({ result: subtract(secondNumber, firstNumber) });
-});
-
-app.post('/numbers/multiply', (req, res) => {
-  const { a, b } = req.body;
-  if (!a || !b) {
-    return res.status(400).send({ error: 'Parameters "a" and "b" are required.' })
-  }
-  if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
-    return res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
-  }
-  res.status(200).json({ result: multiply(req.body.a, req.body.b) });
-});
-
-app.post('/numbers/divide', (req, res) => {
-  const { a, b } = req.body;
-  if (b === 0) {
-    res.status(400).json({ error: 'Unable to divide by 0.' });
-  }
-  if (a === 0) {
-    res.status(200).json({ result: 0 });
-  }
-  if (!a || !b) {
-    res.status(400).json({ error: 'Parameters "a" and "b" are required.' });
-  }
-  if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
-    res.status(400).json({ error: 'Parameters "a" and "b" must be valid numbers.' });
-  }
-  res.status(200).json({ result: divide(a, b) });
-});
-
-app.all('/numbers/remainder', (req, res) => {
-  const { a, b } = req.body;
-  if (b === 0) {
-    res.status(400).json({ error: 'Unable to divide by 0.' });
-  }
-  if (a === 0) {
-    res.status(200).json({ result: 0 })
-  }
-  if (!a || !b) {
-    res.status(400).json({ error: 'Parameters "a" and "b" are required.' })
-  }
-  if (Number.isNaN(Number(a)) || Number.isNaN(Number(b))) {
-    res.status(400).json({ error: 'Parameters must be valid numbers.' })
-  }
-  res.status(200).send({ result: remainder(a, b) });
-});
 
 app.post('/booleans/negate', (req, res) => {
   res.status(200).json({ result: negate(req.body.value) });
